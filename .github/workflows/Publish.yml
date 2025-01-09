@@ -3,7 +3,7 @@ name: Build and Publish Python Wheels
 on:
   push:
     branches:
-      - m
+      - main
 
 jobs:
   build:
