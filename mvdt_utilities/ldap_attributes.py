@@ -1,7 +1,6 @@
 import win32com.client
 from cachetools.func import ttl_cache
 
-
 class LdapAttributes:
     def __init__(self, ldap_object):
         self.current_time = getattr(ldap_object, "currentTime", None)
