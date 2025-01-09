@@ -7,4 +7,4 @@ from .windows import (
     get_ldap_attributes_no_cache,
 ) 
 from .oneagent_info import get_communication_endpoint
-from .execution_time import log_execution_time
+from .execution_time import debug_execution_time

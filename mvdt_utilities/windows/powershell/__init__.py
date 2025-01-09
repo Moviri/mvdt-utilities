@@ -1,1 +1,1 @@
-from powershell import PowershellHelper, PowershellException
+from .powershell import PowershellHelper, PowershellException
