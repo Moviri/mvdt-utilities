@@ -8,5 +8,5 @@ setup(
     author_email="dynatrace_extensions@moviri.com",
     url="https://github.com/Moviri/mvdt-utilities",
     packages=find_packages(),
-    install_requires=['win32security'], 
+    install_requires=['win32security', 'cachetools'], 
 )
