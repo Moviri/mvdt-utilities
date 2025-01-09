@@ -3,7 +3,7 @@ name: Build and Publish Python Wheels
 on:
   push:
     branches:
-      - main
+      - m
 
 jobs:
   build:
@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.10"]
 
     steps:
       - name: Checkout repository
@@ -55,7 +55,6 @@ jobs:
           release_name: Release ${{ github.sha }}
           draft: false
           prerelease: false
-          generate_release_notes: true
 
       - name: Upload Release Assets
         uses: actions/upload-release-asset@v1
