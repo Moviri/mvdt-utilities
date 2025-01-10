@@ -4,13 +4,19 @@ on:
   push:
     branches:
       - main
+      - workflow
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
         python-version: ["3.10"]
 
     steps:
@@ -34,7 +40,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.os }}-${{ matrix.python-version }}
           path: dist/*.whl
 
   release:
@@ -47,21 +52,35 @@ jobs:
         with:
           path: wheels
 
+      - name: Get Name of Artifact
+        run: |
+          tree . 
+          ARTIFACT_PATHNAME=$(ls wheels/artifact/*.whl | head -n 1)
+          ARTIFACT_NAME=$(basename $ARTIFACT_PATHNAME)
+          ARTIFACT_TAG=$(echo ${ARTIFACT_NAME} | cut -d '-' -f 2)
+          RELEASE_NAME=$(echo ${ARTIFACT_NAME%.*})
+          echo "artifact_name=${ARTIFACT_NAME}" >> $GITHUB_ENV
+          echo "release_name=${RELEASE_NAME}" >> $GITHUB_ENV
+          echo "artifact_pathname=${ARTIFACT_PATHNAME}" >> $GITHUB_ENV
+          echo "artifact_tag=${ARTIFACT_TAG}" >> $GITHUB_ENV
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          tag_name: ${{ github.sha }}
-          release_name: Release ${{ github.sha }}
+          tag_name: ${{ env.artifact_tag }}
+          release_name: ${{ env.release_name }}
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Release Assets
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: wheels
-          asset_name: wheels-${{ github.sha }}.zip
+          asset_path: ${{ env.artifact_pathname }}
+          asset_name: ${{ env.artifact_name }}
           asset_content_type: application/zip
