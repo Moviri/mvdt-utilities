@@ -30,16 +30,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install build wheel
 
-      - name: Extract version from package
-        id: get_version
-        run: |
-          if [ ${{ matrix.os }} == "windows-latest" ]; then
-            $VERSION = (python setup.py --version).strip()
-            echo "VERSION=$VERSION" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-          else
-            VERSION=$(python setup.py --version)
-            echo "VERSION=$VERSION" >> $GITHUB_ENV
-
       - name: Build wheel
         run: |
           python -m build --wheel --outdir dist
@@ -64,8 +54,8 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ env.VERSION }}
-          release_name: Release v${{ env.VERSION }}
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
         env:
