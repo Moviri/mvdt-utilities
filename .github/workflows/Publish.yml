@@ -8,6 +8,11 @@ on:
     branches:
       - workflow
 
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -58,13 +63,12 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref_name }}
           release_name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
-          generate_release_notes: true
 
       - name: Upload Release Assets
         uses: actions/upload-release-asset@v1
