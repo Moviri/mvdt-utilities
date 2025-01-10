@@ -59,8 +59,10 @@ jobs:
           tree . 
           ARTIFACT_PATHNAME=$(ls wheels/artifact/*.whl | head -n 1)
           ARTIFACT_NAME=$(basename $ARTIFACT_PATHNAME)
+          ARTIFACT_TAG=$(echo ${ARTIFACT_NAME} | cut -d '-' -f 2)
           echo "artifact_name=${ARTIFACT_NAME}" >> $GITHUB_ENV
           echo "artifact_pathname=${ARTIFACT_PATHNAME}" >> $GITHUB_ENV
+          echo "artifact_tag=${ARTIFACT_TAG}" >> $GITHUB_ENV
 
       - name: Create Release
         id: create_release
@@ -68,8 +70,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
+          tag_name: ${{ env.artifact_tag }}
+          release_name: ${{ env.artifact_name }}
           draft: false
           prerelease: false
 
