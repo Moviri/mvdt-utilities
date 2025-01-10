@@ -49,7 +49,7 @@ jobs:
         id: set_output
         run: |
           echo "artifact_path=wheels/${{ matrix.os }}-${{ matrix.python-version }}" >> $GITHUB_ENV
-
+          echo "os_name=${{ matrix.os }}-${{ matrix.python-version }}" >> $GITHUB_ENV
 
   release:
     needs: build
@@ -59,6 +59,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
+          name: ${{ env.os_name }}
           path: ${{ env.artifact_path }}
 
       - name: Get Name of Artifact
