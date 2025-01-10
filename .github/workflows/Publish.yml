@@ -33,8 +33,12 @@ jobs:
       - name: Extract version from package
         id: get_version
         run: |
-          VERSION=$(python setup.py --version)
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          if [ ${{ matrix.os }} == "windows-latest" ]; then
+            $VERSION = (python setup.py --version).strip()
+            echo "VERSION=$VERSION" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+          else
+            VERSION=$(python setup.py --version)
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Build wheel
         run: |
