@@ -18,7 +18,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
         python-version: ["3.10"]
 
     steps:
@@ -55,10 +55,6 @@ jobs:
         with:
           path: wheels
 
-      - name: Compress Artifacts
-        run: |
-          zip -r wheels-${{ github.ref_name }}.zip wheels
-
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -76,6 +72,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: wheels-${{ github.ref_name }}.zip
-          asset_name: wheels-${{ github.ref_name }}.zip
+          asset_path: wheels/*.whl
+          asset_name: ${{ github.ref_name }}.whl
           asset_content_type: application/zip
