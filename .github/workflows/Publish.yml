@@ -59,13 +59,13 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
-          name: ${{ env.os_name }}
           path: ${{ env.artifact_path }}
 
       - name: Get Name of Artifact
         run: |
           tree . 
-          ARTIFACT_PATHNAME=$(ls wheels/*.whl | head -n 1)
+          ls ${{ env.os_name }}
+          ARTIFACT_PATHNAME=$(ls ${{ env.os_name }}/*.whl | head -n 1)
           ARTIFACT_NAME=$(basename $ARTIFACT_PATHNAME)
           echo ::set-env name=ARTIFACT_NAME::${ARTIFACT_NAME}
           echo ::set-env name=ARTIFACT_PATHNAME::${ARTIFACT_PATHNAME}
