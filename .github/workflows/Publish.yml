@@ -42,14 +42,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.os }}-${{ matrix.python-version }}
+          name: wheels
           path: dist/*.whl
-
-      - name: Set output for release
-        id: set_output
-        run: |
-          echo "artifact_path=wheels/${{ matrix.os }}-${{ matrix.python-version }}" >> $GITHUB_ENV
-          echo "os_name=${{ matrix.os }}-${{ matrix.python-version }}" >> $GITHUB_ENV
 
   release:
     needs: build
@@ -59,13 +53,12 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
-          path: ${{ env.artifact_path }}
+          path: wheels
 
       - name: Get Name of Artifact
         run: |
           tree . 
-          ls ${{ env.os_name }}
-          ARTIFACT_PATHNAME=$(ls ${{ env.os_name }}/*.whl | head -n 1)
+          ARTIFACT_PATHNAME=$(ls wheels/*.whl | head -n 1)
           ARTIFACT_NAME=$(basename $ARTIFACT_PATHNAME)
           echo ::set-env name=ARTIFACT_NAME::${ARTIFACT_NAME}
           echo ::set-env name=ARTIFACT_PATHNAME::${ARTIFACT_PATHNAME}
