@@ -1,11 +1,9 @@
 name: Build and Publish Python Wheels
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
+      - main
       - workflow
 
 permissions:
