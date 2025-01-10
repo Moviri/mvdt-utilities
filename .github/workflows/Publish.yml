@@ -53,6 +53,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
+          name: ${{ matrix.os }}-${{ matrix.python-version }}
           path: wheels
 
       - name: Get Name of Artifact
