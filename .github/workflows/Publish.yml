@@ -58,6 +58,7 @@ jobs:
       - name: Get Name of Artifact
         run: |
           ls
+          ls wheels
           ARTIFACT_PATHNAME=$(ls wheels/*.whl | head -n 1)
           ARTIFACT_NAME=$(basename $ARTIFACT_PATHNAME)
           echo ::set-env name=ARTIFACT_NAME::${ARTIFACT_NAME}
