@@ -45,6 +45,12 @@ jobs:
           name: ${{ matrix.os }}-${{ matrix.python-version }}
           path: dist/*.whl
 
+      - name: Set output for release
+        id: set_output
+        run: |
+          echo "os_name=${{ matrix.os }}-${{ matrix.python-version }}" >> $GITHUB_ENV
+
+
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -53,12 +59,12 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
-          name: ${{ matrix.os }}-${{ matrix.python-version }}
           path: wheels
 
       - name: Get Name of Artifact
         run: |
           tree . 
+          echo ${{ env.os_name }}
           ARTIFACT_PATHNAME=$(ls wheels/*.whl | head -n 1)
           ARTIFACT_NAME=$(basename $ARTIFACT_PATHNAME)
           echo ::set-env name=ARTIFACT_NAME::${ARTIFACT_NAME}
